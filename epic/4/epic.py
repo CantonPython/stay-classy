@@ -90,6 +90,15 @@ class Player:
                'location={self.location})'\
                .format(self=self)
 
+    def move(self, direction):
+        _from = self.location
+        _to = _from.exits.get(direction)
+        if not _to:
+            print("You can't go that way.")
+        else:
+            _from.on_exit()
+            _to.on_enter()
+            self.location = _to
 
 #------------------------------------------------------------------------------------
 # Items
@@ -146,3 +155,9 @@ for location in locations:
 
 player = Player('Mongo', location=road)
 print(player)
+
+player.move('north')
+player.move('down')
+player.move('up')
+player.move('south')
+player.move('south')
