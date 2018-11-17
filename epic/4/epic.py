@@ -68,7 +68,7 @@ class Location:
 
     def remove(self, name):
         item = self.items[name]
-        del self.item[name]
+        del self.items[name]
         return item
 
     def describe(self):
@@ -109,6 +109,20 @@ class Player:
             _from.on_exit()
             _to.on_enter()
             self.location = _to
+
+    def take(self, name):
+        item = self.location.remove(name)
+        self.items[item.name] = item
+
+    def drop(self, name):
+        item = self.items[name]
+        self.location.place(item)
+
+    def status(self):
+        print('{self.name} has {self.health} health.'.format(self=self))
+        print('Items:')
+        for item in self.items.values():
+            item.describe()
 
 #------------------------------------------------------------------------------------
 # Items
@@ -168,8 +182,13 @@ for location in locations:
 player = Player('Mongo', location=road)
 print(player)
 
+player.status()
 player.move('north')
 player.move('down')
 player.move('up')
 player.move('south')
 player.move('south')
+
+player.move('north')
+player.take('keys')
+player.status()

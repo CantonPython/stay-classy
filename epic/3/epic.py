@@ -68,7 +68,7 @@ class Location:
 
     def remove(self, name):
         item = self.items[name]
-        del self.item[name]
+        del self.items[name]
         return item
 
     def describe(self):
