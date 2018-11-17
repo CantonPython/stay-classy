@@ -1,19 +1,21 @@
 
 class Item:
-    def __init__(self, desc, big=False):
+    def __init__(self, name, desc, big=False):
+        self.name = name
         self.desc = desc
         self.big = big
 
     def __repr__(self):
-        return 'Item(desc="{self.desc}", '\
+        return 'Item(name={self.name}, '\
+               'desc="{self.desc}", '\
                'big={self.big})'.format(self=self)
 
     def describe(self):
         print(self.desc)
 
 class LightSource(Item):
-    def __init__(self, desc):
-        super().__init__(desc)
+    def __init__(self, name, desc):
+        super().__init__(name, desc)
         self.lit = False
 
     def __repr__(self):
@@ -33,18 +35,17 @@ class LightSource(Item):
             print('already off')
 
     def describe(self):
+        desc = self.desc
         if self.lit:
-            print('lit', end=' ')
-        else:
-            print('unlit', end=' ')
-        super().describe()
+            desc = desc + ', lit'
+        print(desc)
 
 
 class Location:
     def __init__(self, name, desc):
         self.name = name
         self.desc = desc
-        self.items = []
+        self.items = dict()
         self.exits = dict(
             north=None,
             south=None,
@@ -61,11 +62,20 @@ class Location:
                'exits={self.exits})'\
                .format(self=self)
 
+    def place(self, item):
+        name = item.name
+        self.items[name] = item
+
+    def remove(self, name):
+        item = self.items[name]
+        del self.item[name]
+        return item
+
     def describe(self):
         print(self.desc)
         if self.items:
             print('You see')
-            for item in self.items:
+            for item in self.items.values():
                 item.describe()
         print()
 
@@ -80,7 +90,7 @@ class Player:
     def __init__(self, name, location=None):
         self.name = name
         self.health = 100
-        self.items = []
+        self.items = dict()
         self.location = location
 
     def __repr__(self):
@@ -104,21 +114,23 @@ class Player:
 # Items
 
 # Create some basic items.
-book = Item('old red book')
-keys = Item('set of jangly keys')
-lantern = LightSource('brass lantern')
-torch = LightSource('old wooden torch')
-wand = Item('wand inscribed with the word xyzzy')
+book = Item('book', 'an old red book')
+keys = Item('keys', 'a set of jangly keys')
+lantern = LightSource('lantern', 'a brass lantern')
+torch = LightSource('torch', 'an old wooden torch')
+wand = Item('wand', 'a wand inscribed with the word xyzzy')
 
 items = [book, keys, lantern, wand]
 for item in items:
     item.describe()
 
-print('Demo light source class')
+# Demo light source class.
+print('Turn lantern on and off')
 lantern.describe()
 lantern.on()
 lantern.describe()
 lantern.off()
+lantern.describe()
 lantern.off()
 
 # ------------------------------------------------------------------------------------
@@ -141,9 +153,9 @@ wellhouse.exits['down'] = chamber
 chamber.exits['up'] = wellhouse
 
 # Populate items
-wellhouse.items.append(lantern)
-wellhouse.items.append(keys)
-chamber.items.append(book)
+wellhouse.place(lantern)
+wellhouse.place(keys)
+chamber.place(book)
 
 locations = [road, wellhouse, chamber]
 for location in locations:

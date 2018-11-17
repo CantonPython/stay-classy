@@ -1,19 +1,21 @@
 
 class Item:
-    def __init__(self, desc, big=False):
+    def __init__(self, name, desc, big=False):
+        self.name = name
         self.desc = desc
         self.big = big
 
     def __repr__(self):
-        return 'Item(desc="{self.desc}", '\
+        return 'Item(name={self.name}, '\
+               'desc="{self.desc}", '\
                'big={self.big})'.format(self=self)
 
     def describe(self):
         print(self.desc)
 
 class LightSource(Item):
-    def __init__(self, desc):
-        super().__init__(desc)
+    def __init__(self, name, desc):
+        super().__init__(name, desc)
         self.lit = False
 
     def __repr__(self):
@@ -33,27 +35,27 @@ class LightSource(Item):
             print('already off')
 
     def describe(self):
+        desc = self.desc
         if self.lit:
-            print('lit', end=' ')
-        else:
-            print('unlit', end=' ')
-        super().describe()
-
+            desc = desc + ', lit'
+        print(desc)
 
 # Create some basic items.
-book = Item('old red book')
-keys = Item('set of jangly keys')
-lantern = LightSource('brass lantern')
-torch = LightSource('old wooden torch')
-wand = Item('wand inscribed with the word xyzzy')
+book = Item('book', 'an old red book')
+keys = Item('keys', 'a set of jangly keys')
+lantern = LightSource('lantern', 'a brass lantern')
+torch = LightSource('torch', 'an old wooden torch')
+wand = Item('wand', 'a wand inscribed with the word xyzzy')
 
 items = [book, keys, lantern, wand]
 for item in items:
     item.describe()
 
-print('Demo light source class')
+# Demo light source class.
+print('Turn lantern on and off')
 lantern.describe()
 lantern.on()
 lantern.describe()
 lantern.off()
+lantern.describe()
 lantern.off()
