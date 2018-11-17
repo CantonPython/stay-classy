@@ -21,13 +21,13 @@ class LightSource(Item):
                'super={1})'.format(self.lit, super().__repr__())
 
     def on(self):
-        if self.on:
+        if self.lit:
             print('already on')
         else:
             self.lit = True;
 
     def off(self):
-        if self.on:
+        if self.lit:
             self.lit = False
         else:
             print('already off')
